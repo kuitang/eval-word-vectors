@@ -21,8 +21,6 @@ def model_all_wordsim(model):
                               'data',
                               'word-sim')
 
-  print "DEBUG: word_sim_dir", word_sim_dir
-
   rows = []
   for filename in os.listdir(word_sim_dir):
     manual_dict, auto_dict = ({}, {})

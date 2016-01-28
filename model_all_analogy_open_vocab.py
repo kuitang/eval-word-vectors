@@ -18,6 +18,7 @@ def model_all_analogy_open_vocab(model):
     """
 
     rows = []
+    # TODO: Parallelize...
     for dataset, reader in analogy_readers.iteritems():
         counts = Counter()
         correct_counts = Counter()
