@@ -16,8 +16,9 @@ def read_google():
     with open(fname, 'r') as of:
         curr_category = None
         for line in of:
+            line = line.strip().lower()
             # Are we at a category header?
-            toks = line.split()
+            toks = [unicode(x, encoding='ascii') for x in line.split()]
             if line[0] == ':':
                 curr_category = toks[1]
             else:

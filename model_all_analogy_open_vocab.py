@@ -9,7 +9,7 @@ from collections import Counter
 
 import pandas as pd
 
-def model_all_wordsim(model):
+def model_all_analogy_open_vocab(model):
     """Return DataFrame of analogy completion
 
     model must the following methods:
@@ -22,20 +22,27 @@ def model_all_wordsim(model):
         counts = Counter()
         correct_counts = Counter()
 
+        not_found, total_size = (0, 0)
+
         for row in reader():
             counts[row.category] += 1
 
-            prediction = model.predict_analogy(*row.question)
-            if prediction.lower() == row.answer.lower():
-                correct_counts[row.category] += 1
+            if all(w in model for w in row.question):
+                prediction = model.predict_analogy(*row.question)
+                if prediction.lower() == row.answer.lower():
+                    correct_counts[row.category] += 1
+            else:
+                not_found += 1
+
+            total_size += 1
 
         # Collate statistics
         for category, n_total in counts.iteritems():
             accuracy = float(correct_counts[category]) / n_total
-            row = [dataset, category, accuracy]
+            row = [dataset, total_size, not_found, category, accuracy]
             rows.append(row)
 
-    return pd.DataFrame(rows, columns=['dataset', 'category', 'accuracy'])
+    return pd.DataFrame(rows, columns=['dataset', 'total_size', 'not_found', 'category', 'accuracy'])
 
 # Mock model for test case
 class ConstantModel(object):
@@ -53,6 +60,6 @@ class ConstantModel(object):
 # Test case
 if __name__ == '__main__':
     model = ConstantModel('sings')
-    results = model_all_wordsim(model)
+    results = model_all_analogy_open_vocab(model)
     print results
 

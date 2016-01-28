@@ -30,6 +30,8 @@ def model_all_wordsim(model):
     for line in open(os.path.join(word_sim_dir, filename),'r'):
       line = line.strip().lower()
       word1, word2, val = line.split()
+      word1 = unicode(word1, encoding='ascii')
+      word2 = unicode(word2, encoding='ascii')
       if word1 in model and word2 in model:
         manual_dict[(word1, word2)] = float(val)
         auto_dict[(word1, word2)] = model.sim(word1, word2)
