@@ -38,4 +38,16 @@ def read_msr():
                            tuple(q_line.split()),
                            answer)
 
+def read_msr_short():
+    q_fname = os.path.join(analogy_open_vocab_dir, 'msr-short', 'word_relationship.questions')
+    a_fname = os.path.join(analogy_open_vocab_dir, 'msr-short', 'word_relationship.answers')
+
+    with open(q_fname, 'r') as qf, open(a_fname, 'r') as af:
+        for q_line, a_line in izip(qf, af):
+            category, answer = a_line.split()
+            yield Question(category,
+                           tuple(q_line.split()),
+                           answer)
 analogy_readers = {'google': read_google, 'msr': read_msr}
+#analogy_readers = {'msr': read_msr}
+#analogy_readers = {'msr_short': read_msr_short}
