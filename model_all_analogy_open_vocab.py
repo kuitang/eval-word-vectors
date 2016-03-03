@@ -21,9 +21,8 @@ def model_all_analogy_open_vocab(model):
     # TODO: Parallelize...
     for dataset, reader in analogy_readers.iteritems():
         counts = Counter()
+        not_found = Counter()
         correct_counts = Counter()
-
-        not_found, total_size = (0, 0)
 
         for row in reader():
             counts[row.category] += 1
@@ -33,14 +32,12 @@ def model_all_analogy_open_vocab(model):
                 if prediction.lower() == row.answer.lower():
                     correct_counts[row.category] += 1
             else:
-                not_found += 1
-
-            total_size += 1
+                not_found[row.category] += 1
 
         # Collate statistics
         for category, n_total in counts.iteritems():
             accuracy = float(correct_counts[category]) / n_total
-            row = [dataset, total_size, not_found, category, accuracy]
+            row = [dataset, n_total, not_found[category], category, accuracy]
             rows.append(row)
 
     return pd.DataFrame(rows, columns=['dataset', 'total_size', 'not_found', 'category', 'accuracy'])
